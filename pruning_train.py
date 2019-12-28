@@ -60,6 +60,8 @@ parser.add_argument('--sparse',
                     default='/data/yahe/imagenet/resnet50-rate-0.7/checkpoint.resnet50.2018-01-07-9744.pth.tar',
                     type=str, metavar='PATH', help='path of sparse model')
 parser.add_argument('--lr_adjust', type=int, default=30, help='number of epochs that change learning rate')
+parser.add_argument('--pretrain-path', type=str, default=None)
+
 
 
 args = parser.parse_args()
@@ -84,6 +86,9 @@ def main():
     print_log("=> creating model '{}'".format(args.arch), log)
     if args.arch == "vgg11":
         model = slimmingvgg()
+        if args.use_pretrain:
+            checkpoint = torch.load(args.pretrain_path)
+            model.load_state_dict(checkpoint['state_dict'])
         pass
     else:
         model = models.__dict__[args.arch](pretrained=True)
