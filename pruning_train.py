@@ -13,6 +13,8 @@ import torch.utils.data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models
+
+from models.vgg import slimmingvgg
 from utils import convert_secs2time, time_string, time_file_str
 # from models import print_log
 import models
@@ -80,7 +82,11 @@ def main():
     print_log("Vision  version : {}".format(torchvision.__version__), log)
     # create model
     print_log("=> creating model '{}'".format(args.arch), log)
-    model = models.__dict__[args.arch](pretrained=True)
+    if args.arch == "vgg11":
+        model = slimmingvgg()
+        pass
+    else:
+        model = models.__dict__[args.arch](pretrained=True)
     if args.use_sparse:
         model = import_sparse(model)
     print_log("=> Model : {}".format(model), log)
